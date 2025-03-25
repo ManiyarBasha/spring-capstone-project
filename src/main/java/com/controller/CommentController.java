@@ -14,12 +14,20 @@ import io.swagger.v3.oas.annotations.Operation;
 
 import jakarta.validation.Valid;
 
+/**
+ * REST Controller for handling blog comments.
+ */
 @RestController
 @RequestMapping("/api/blogs/comment")
-@Tag(name = "Comment Controller", description = "API for managing blog comments")  // Swagger Tag
+@Tag(name = "Comment Controller", description = "API for managing blog comments")
 public class CommentController {
+
+    /** Service layer dependency for handling comment-related operations. */
     private final CommentService commentService;
 
+    /**
+     * Constructor-based dependency injection.
+     */
     public CommentController(CommentService commentService) {
         this.commentService = commentService;
     }
@@ -27,8 +35,7 @@ public class CommentController {
     @PostMapping
     @Operation(summary = "Add a comment", description = "Adds a comment to a blog post")
     public ResponseEntity<CommentDTO> addComment(@Valid @RequestBody CommentDTO commentDTO) {
-    	 validateBlogId(commentDTO.getBlogId()); // Validate blogId before proceeding
-
+        validateBlogId(commentDTO.getBlogId()); // Validate blogId before proceeding
         CommentDTO addedComment = commentService.addComment(commentDTO);
         return ResponseEntity.ok(addedComment);
     }
@@ -48,10 +55,13 @@ public class CommentController {
         return ResponseEntity.ok(comments);
     }
 
+    /**
+     * Validates that the provided blog ID is a positive number.
+     * Throws a {@link ResourceNotFoundException} if the ID is invalid.
+     */
     private void validateBlogId(Long blogId) {
-    	if ( blogId < 1) {
-    		throw new ResourceNotFoundException("Blog ID must be a positive number");
+        if (blogId < 1) {
+            throw new ResourceNotFoundException("Blog ID must be a positive number");
         }
     }
-
 }

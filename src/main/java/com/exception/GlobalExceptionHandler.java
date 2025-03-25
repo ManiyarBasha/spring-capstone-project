@@ -13,10 +13,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import jakarta.validation.ConstraintViolationException;
 
+/**
+ * Global exception handler to manage application-wide exceptions.
+ * Handles validation errors, resource not found errors, and other common exceptions.
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Handle validation errors for query parameters and path variables
+    /**
+     * Handles validation errors for query parameters and path variables.
+     * Returns a list of constraint violations.
+     */
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex) {
         List<String> errors = ex.getConstraintViolations().stream()
@@ -26,13 +33,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
-    // Handle resource not found errors
+    /**
+     * Handles resource not found errors.
+     * Returns a NOT FOUND response with the error message.
+     */
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    // Handle validation errors for request bodies (DTO validation)
+    /**
+     * Handles validation errors for request bodies (DTO validation).
+     * Returns a list of field errors.
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
         List<String> details = new ArrayList<>();

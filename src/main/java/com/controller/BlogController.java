@@ -1,4 +1,4 @@
-package com.controller;
+package com.controller;  // Package declaration
 
 import java.util.List;
 
@@ -15,18 +15,26 @@ import io.swagger.v3.oas.annotations.Operation;
 
 import jakarta.validation.Valid;
 
+/**
+ * REST Controller for handling blog-related operations.
+ */
 @RestController
 @RequestMapping("/api/blogs")
-@Tag(name = "Blog Controller", description = "API for managing blogs")  // Swagger Tag
+@Tag(name = "Blog Controller", description = "API for managing blogs")  // Swagger Tag for API documentation
 public class BlogController {
+
+    /** Service layer dependency for handling business logic. */
     private final BlogService blogService;
 
+    /**
+     * Constructor-based dependency injection.
+     */
     public BlogController(BlogService blogService) {
         this.blogService = blogService;
     }
 
     @PostMapping
-   @Operation(summary = "Create a new blog", description = "Creates a new blog entry")
+    @Operation(summary = "Create a new blog", description = "Creates a new blog entry")
     public ResponseEntity<BlogDTO> createBlog(@Valid @RequestBody BlogDTO blogDTO) {
         BlogDTO createdBlog = blogService.createBlog(blogDTO);
         return new ResponseEntity<>(createdBlog, HttpStatus.CREATED);
